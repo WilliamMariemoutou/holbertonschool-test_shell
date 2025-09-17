@@ -12,7 +12,7 @@ extern char **environ;
 
 int is_interactive_mode(void);
 void print_prompt(void);
-char *trim newline(char *s);
+char *trim_newline(char *s);
 void run_commande(char *cmd, char *prog_name, unsigned long line_no);
 
 int is_interactive_mode(void)
@@ -27,7 +27,7 @@ void print_prompt(void)
 	fflush(stdout);
 }
 
-char *trim newline(char *s)
+char *trim_newline(char *s)
 {
 	size_t len;
 
@@ -71,60 +71,60 @@ void run_command(char *cmd, char *prog_name, unsigned long line_no)
 		}
 		else
 		{
-			dprintf(STDERR_FILENO; "%s: %lu: %s: not found\n", prog_name, line_no, cmd);
+			dprintf(STDERR_FILENO); "%s: %lu: %s: not found\n", prog_name, line_no, cmd);
 		}
 		_exit(127);
 	}
 	else
-    {
-        do {
-            if (waitpid(pid, &status, 0) == -1)
-            {
-                if (errno == EINTR)
-                    continue;
-                perror(prog_name);
-                break;
-            }
-            else
-                break;
-        } while (1);
-    }
+	{
+		do {
+			if (waitpid(pid, &status, 0) == -1)
+			{
+				if (errno == EINTR)
+					continue;
+				perror(prog_name);
+				break;
+			}
+			else
+				break;
+		} while (1);
+	}
 }
 
 int main(int argc, char **argv)
 {
-    char *line = NULL;
-    size_t n = 0;
-    ssize_t read_len;
-    unsigned long line_no = 0;
-    int interactive = is_interactive_mode();
+	char *line = NULL;
+	size_t n = 0;
+	ssize_t read_len;
+	unsigned long line_no = 0;
+	int interactive = is_interactive_mode();
 
-    (void) argc;
+	(void) argc;
 
-    while (1)
-    {
-        if (interactive)
-            print_prompt();
+	while (1)
+	{
+		if (interactive)
+			print_prompt();
 
-        read_len = getline(&line, &n, stdin);
-        if (read_len == -1)
-        {
-            free(line);
-            if (interactive)
-                write(STDOUT_FILENO, "\n", 1);
-            exit(EXIT_SUCCESS);
-        }
+		read_len = getline(&line, &n, stdin);
+		if (read_len == -1)
+		{
+			free(line);
+			if (interactive)
+				write(STDOUT_FILENO, "\n", 1);
+			exit(EXIT_SUCCESS);
+		}
 
-        line_no++;
-        trim_newline(line);
+		line_no++;
+		trim_newline(line);
 
-        if (line[0] == '\0')
-            continue;
+		if (line[0] == '\0')
+			continue;
 
-        run_command(line, argv[0], line_no);
-    }
+		run_command(line, argv[0], line_no);
+	}
 
-    free(line);
-    return (0);
+	free(line);
+	return (0);
 }
 
